@@ -2,7 +2,13 @@
   "name": "workspaces",
   "displayName": "Workspaces",
   "description": "Quick workspace switcher",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "publisher": "vladstudio",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vladstudio/vscode-workspaces"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -11,7 +17,7 @@
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
-  "icon": "icon/workspaces.png",
+  "icon": "icon/workspaces-color.png",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
