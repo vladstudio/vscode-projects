@@ -17,11 +17,13 @@ function openFolder(fsPath: string) {
   vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(fsPath), { forceNewWindow: false });
 }
 
+let iconPath: { light: vscode.Uri; dark: vscode.Uri };
+
 class FolderItem extends vscode.TreeItem {
   constructor(public fsPath: string) {
     super(path.basename(fsPath));
     this.description = fsPath;
-    this.iconPath = new vscode.ThemeIcon("folder");
+    this.iconPath = iconPath;
     this.command = { command: "workspaces.openFolder", title: "Open", arguments: [fsPath] };
   }
 }
@@ -60,6 +62,8 @@ const treeProvider: vscode.TreeDataProvider<string> & vscode.TreeDragAndDropCont
 };
 
 export function activate(ctx: vscode.ExtensionContext) {
+  const iconUri = vscode.Uri.joinPath(ctx.extensionUri, "icon", "workspaces.svg");
+  iconPath = { light: iconUri, dark: iconUri };
   state = ctx.globalState;
   folders = state.get<string[]>(KEY, []);
 
