@@ -1,0 +1,88 @@
+{
+  "name": "workspaces",
+  "displayName": "Workspaces",
+  "description": "Quick workspace switcher",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "icon": "icon/workspaces.png",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "workspaces",
+          "title": "Workspaces",
+          "icon": "icon/workspaces.svg"
+        }
+      ]
+    },
+    "views": {
+      "workspaces": [
+        {
+          "id": "workspacesView",
+          "name": "Workspaces"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "workspaces.addFolder",
+        "title": "Workspaces: Add Folder",
+        "icon": "$(add)"
+      },
+      {
+        "command": "workspaces.removeFolder",
+        "title": "Remove"
+      },
+      {
+        "command": "workspaces.openFolder",
+        "title": "Open Workspace"
+      },
+      {
+        "command": "workspaces.openPicker",
+        "title": "Workspaces: Open Picker"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "workspaces.addFolder",
+          "when": "view == workspacesView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "workspaces.addFolder",
+          "when": "view == workspacesView"
+        },
+        {
+          "command": "workspaces.removeFolder",
+          "when": "view == workspacesView"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "workspaces.openPicker",
+        "key": "ctrl+alt+w",
+        "mac": "cmd+alt+w"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}

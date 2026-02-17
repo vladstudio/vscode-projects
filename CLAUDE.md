@@ -1,0 +1,21 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Build Commands
+
+- `npm run compile` — Build the extension (TypeScript → `out/`)
+- `npm run watch` — Build in watch mode
+- Press F5 in VS Code to launch Extension Development Host
+
+## Architecture
+
+Minimal VS Code extension — a workspace switcher. All logic lives in a single file: `src/extension.ts`.
+
+- **Storage**: `globalState` memento stores folder list as `string[]`. No file watchers or disk I/O.
+- **Tree View**: Flat `TreeDataProvider` with `TreeDragAndDropController` for reordering. Elements are raw `string` paths.
+- **Commands**: `addFolder`, `removeFolder`, `openFolder`, `openPicker`. All registered in `activate()`.
+- **Activation**: Only on `onView:workspacesView` or command invocation. Zero background work.
+- **Keybinding**: `Cmd+Alt+W` opens the Quick Pick workspace switcher.
+
+The extension manifest (`package.json`) defines the sidebar view container, menus, and keybindings declaratively.
