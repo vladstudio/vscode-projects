@@ -16,6 +16,6 @@ Minimal VS Code extension — a project switcher. All logic lives in a single fi
 - **Tree View**: Flat `TreeDataProvider` with `TreeDragAndDropController` for reordering. Elements are raw `string` paths.
 - **Commands**: `addFolder`, `removeFolder`, `openFolder`, `openPicker`. All registered in `activate()`.
 - **Activation**: Only on `onView:projectsView` or command invocation. Zero background work.
-- **Keybinding**: `Cmd+Alt+W` opens the Quick Pick project switcher.
+- **Keybinding**: `Cmd+Alt+P` opens the Quick Pick project switcher.
 
 The extension manifest (`package.json`) defines the sidebar view container, menus, and keybindings declaratively.

@@ -77,8 +77,8 @@
     "keybindings": [
       {
         "command": "projects.openPicker",
-        "key": "ctrl+alt+w",
-        "mac": "cmd+alt+w"
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p"
       }
     ]
   },
