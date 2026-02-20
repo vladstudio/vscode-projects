@@ -1,7 +1,7 @@
 {
-  "name": "workspaces",
-  "displayName": "Workspaces",
-  "description": "Quick workspace switcher",
+  "name": "vladstudio-projects",
+  "displayName": "Projects",
+  "description": "Quick project switcher",
   "version": "0.1.0",
   "publisher": "vladstudio",
   "license": "MIT",
@@ -22,67 +22,68 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "workspaces",
-          "title": "Workspaces",
+          "id": "projects",
+          "title": "Projects",
           "icon": "icon/workspaces.svg"
         }
       ]
     },
     "views": {
-      "workspaces": [
+      "projects": [
         {
-          "id": "workspacesView",
-          "name": "Workspaces"
+          "id": "projectsView",
+          "name": "Projects"
         }
       ]
     },
     "commands": [
       {
-        "command": "workspaces.addFolder",
-        "title": "Workspaces: Add Folder",
+        "command": "projects.addFolder",
+        "title": "Projects: Add Folder",
         "icon": "$(add)"
       },
       {
-        "command": "workspaces.removeFolder",
+        "command": "projects.removeFolder",
         "title": "Remove"
       },
       {
-        "command": "workspaces.openFolder",
-        "title": "Open Workspace"
+        "command": "projects.openFolder",
+        "title": "Open Project"
       },
       {
-        "command": "workspaces.openPicker",
-        "title": "Workspaces: Open Picker"
+        "command": "projects.openPicker",
+        "title": "Projects: Open Picker"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "workspaces.addFolder",
-          "when": "view == workspacesView",
+          "command": "projects.addFolder",
+          "when": "view == projectsView",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "workspaces.addFolder",
-          "when": "view == workspacesView"
+          "command": "projects.addFolder",
+          "when": "view == projectsView"
         },
         {
-          "command": "workspaces.removeFolder",
-          "when": "view == workspacesView"
+          "command": "projects.removeFolder",
+          "when": "view == projectsView"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "workspaces.openPicker",
+        "command": "projects.openPicker",
         "key": "ctrl+alt+w",
         "mac": "cmd+alt+w"
       }
     ]
   },
   "scripts": {
+    "vscode:prepublish": "bun run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
   },

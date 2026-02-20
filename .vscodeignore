@@ -3,6 +3,10 @@ src/**
 node_modules/**
 tsconfig.json
 .gitignore
+.git/**
 .claude/**
+CLAUDE.md
+build-local.sh
 *.vsix
 icon/.DS_Store
+**/*.ts

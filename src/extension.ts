@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
-const MIME = "application/vnd.code.tree.workspacesView";
-const KEY = "workspaces.folders";
+const MIME = "application/vnd.code.tree.projectsView";
+const KEY = "projects.folders";
 
 let folders: string[] = [];
 let state: vscode.Memento;
@@ -24,7 +24,7 @@ class FolderItem extends vscode.TreeItem {
     super(path.basename(fsPath));
     this.description = fsPath;
     this.iconPath = iconPath;
-    this.command = { command: "workspaces.openFolder", title: "Open", arguments: [fsPath] };
+    this.command = { command: "projects.openFolder", title: "Open", arguments: [fsPath] };
   }
 }
 
@@ -67,7 +67,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   state = ctx.globalState;
   folders = state.get<string[]>(KEY, []);
 
-  const tree = vscode.window.createTreeView("workspacesView", {
+  const tree = vscode.window.createTreeView("projectsView", {
     treeDataProvider: treeProvider,
     dragAndDropController: treeProvider,
     canSelectMany: false,
@@ -75,7 +75,7 @@ export function activate(ctx: vscode.ExtensionContext) {
   ctx.subscriptions.push(tree, emitter);
 
   ctx.subscriptions.push(
-    vscode.commands.registerCommand("workspaces.addFolder", async () => {
+    vscode.commands.registerCommand("projects.addFolder", async () => {
       const uris = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectMany: true });
       if (!uris) return;
       for (const uri of uris) {
@@ -84,7 +84,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       save();
     }),
 
-    vscode.commands.registerCommand("workspaces.removeFolder", (fsPath: string) => {
+    vscode.commands.registerCommand("projects.removeFolder", (fsPath: string) => {
       const idx = folders.indexOf(fsPath);
       if (idx !== -1) {
         folders.splice(idx, 1);
@@ -92,13 +92,13 @@ export function activate(ctx: vscode.ExtensionContext) {
       }
     }),
 
-    vscode.commands.registerCommand("workspaces.openFolder", (fsPath: string) => {
+    vscode.commands.registerCommand("projects.openFolder", (fsPath: string) => {
       openFolder(fsPath);
     }),
 
-    vscode.commands.registerCommand("workspaces.openPicker", async () => {
+    vscode.commands.registerCommand("projects.openPicker", async () => {
       const items = folders.map((f) => ({ label: path.basename(f), description: f, fsPath: f }));
-      const picked = await vscode.window.showQuickPick(items, { placeHolder: "Select workspace" });
+      const picked = await vscode.window.showQuickPick(items, { placeHolder: "Select project" });
       if (picked) openFolder(picked.fsPath);
     }),
   );
