@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
 import * as path from "path";
 
 const MIME = "application/vnd.code.tree.projectsView";
@@ -15,6 +16,15 @@ function save() {
 
 function openFolder(fsPath: string) {
   vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(fsPath), { forceNewWindow: false });
+}
+
+function addFolderIfMissing(fsPath: string) {
+  if (!folders.includes(fsPath)) {
+    folders.push(fsPath);
+    save();
+    return true;
+  }
+  return false;
 }
 
 let iconPath: { light: vscode.Uri; dark: vscode.Uri };
@@ -82,6 +92,42 @@ export function activate(ctx: vscode.ExtensionContext) {
         if (!folders.includes(uri.fsPath)) folders.push(uri.fsPath);
       }
       save();
+    }),
+
+    vscode.commands.registerCommand("projects.addCurrentFolder", () => {
+      const currentFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+      if (!currentFolder) {
+        vscode.window.showInformationMessage("No current folder to add.");
+        return;
+      }
+
+      const added = addFolderIfMissing(currentFolder);
+      if (added) {
+        vscode.window.showInformationMessage(`Added project: ${path.basename(currentFolder)}`);
+        return;
+      }
+
+      vscode.window.showInformationMessage(`Project already exists: ${path.basename(currentFolder)}`);
+    }),
+
+    vscode.commands.registerCommand("projects.cleanupFolders", () => {
+      const removedCount = folders.length;
+      const nextFolders = folders.filter((folder) => {
+        try {
+          return fs.statSync(folder).isDirectory();
+        } catch {
+          return false;
+        }
+      });
+      const deletedCount = removedCount - nextFolders.length;
+      if (deletedCount === 0) {
+        vscode.window.showInformationMessage("Cleanup complete: no missing folders found.");
+        return;
+      }
+
+      folders = nextFolders;
+      save();
+      vscode.window.showInformationMessage(`Cleanup complete: removed ${deletedCount} missing project${deletedCount === 1 ? "" : "s"}.`);
     }),
 
     vscode.commands.registerCommand("projects.removeFolder", (fsPath: string) => {

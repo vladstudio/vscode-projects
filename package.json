@@ -43,6 +43,16 @@
         "icon": "$(add)"
       },
       {
+        "command": "projects.addCurrentFolder",
+        "title": "Projects: Add Current Folder",
+        "icon": "$(star-empty)"
+      },
+      {
+        "command": "projects.cleanupFolders",
+        "title": "Projects: Remove Missing Folders",
+        "icon": "$(trash)"
+      },
+      {
         "command": "projects.removeFolder",
         "title": "Remove"
       },
@@ -59,6 +69,16 @@
       "view/title": [
         {
           "command": "projects.addFolder",
+          "when": "view == projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "projects.addCurrentFolder",
+          "when": "view == projectsView",
+          "group": "navigation"
+        },
+        {
+          "command": "projects.cleanupFolders",
           "when": "view == projectsView",
           "group": "navigation"
         }
