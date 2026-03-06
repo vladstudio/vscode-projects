@@ -1,2 +1,2 @@
 #!/bin/bash
-npm run compile && npx @vscode/vsce publish
+npm version patch --no-git-tag-version && npm run compile && npx @vscode/vsce publish
