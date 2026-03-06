@@ -2,7 +2,7 @@
   "name": "vladstudio-projects",
   "displayName": "Projects by Vlad.studio",
   "description": "Quick project switcher",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "vladstudio",
   "license": "MIT",
   "repository": {
@@ -104,8 +104,8 @@
   },
   "scripts": {
     "vscode:prepublish": "bun run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "compile": "node ./node_modules/typescript/lib/tsc.js -p ./",
+    "watch": "node ./node_modules/typescript/lib/tsc.js -watch -p ./"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
