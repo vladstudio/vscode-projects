@@ -2,14 +2,15 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 
-const MIME = "application/vnd.code.tree.projectsView";
 const KEY = "projects.folders";
+const byName = (a: string, b: string) => path.basename(a).localeCompare(path.basename(b));
 
 let folders: string[] = [];
 let state: vscode.Memento;
 const emitter = new vscode.EventEmitter<void>();
 
 function save() {
+  folders.sort(byName);
   state.update(KEY, folders);
   emitter.fire();
 }
@@ -38,10 +39,8 @@ class FolderItem extends vscode.TreeItem {
   }
 }
 
-const treeProvider: vscode.TreeDataProvider<string> & vscode.TreeDragAndDropController<string> = {
+const treeProvider: vscode.TreeDataProvider<string> = {
   onDidChangeTreeData: emitter.event,
-  dropMimeTypes: [MIME],
-  dragMimeTypes: [MIME],
 
   getTreeItem(fsPath: string) {
     return new FolderItem(fsPath);
@@ -54,21 +53,6 @@ const treeProvider: vscode.TreeDataProvider<string> & vscode.TreeDragAndDropCont
   getParent() {
     return undefined;
   },
-
-  handleDrag(sources: readonly string[], data: vscode.DataTransfer) {
-    data.set(MIME, new vscode.DataTransferItem(sources[0]));
-  },
-
-  handleDrop(target: string | undefined, data: vscode.DataTransfer) {
-    const source = data.get(MIME)?.value as string | undefined;
-    if (!source) return;
-    const fromIdx = folders.indexOf(source);
-    if (fromIdx === -1) return;
-    folders.splice(fromIdx, 1);
-    const toIdx = target ? folders.indexOf(target) : folders.length;
-    folders.splice(toIdx === -1 ? folders.length : toIdx, 0, source);
-    save();
-  },
 };
 
 export function activate(ctx: vscode.ExtensionContext) {
@@ -76,10 +60,10 @@ export function activate(ctx: vscode.ExtensionContext) {
   iconPath = { light: iconUri, dark: iconUri };
   state = ctx.globalState;
   folders = state.get<string[]>(KEY, []);
+  folders.sort(byName);
 
   const tree = vscode.window.createTreeView("projectsView", {
     treeDataProvider: treeProvider,
-    dragAndDropController: treeProvider,
     canSelectMany: false,
   });
   ctx.subscriptions.push(tree, emitter);
