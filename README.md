@@ -7,9 +7,9 @@ Switch between your project folders without leaving VS Code.
 ## Features
 
 - **Sidebar panel** -- browse your saved projects in the activity bar
-- **Quick picker** -- press `Cmd+Alt+W` (`Ctrl+Alt+W` on Windows/Linux) to jump to any project
+- **Quick picker** -- jump to any project with a shortcut (default: `Cmd+Alt+W` or `Ctrl+Alt+W` on Windows/Linux)
 - **Drag and drop** -- reorder projects however you like
-- **Zero config** -- no files to manage, everything is stored in VS Code's global state
+- **Zero config** -- no files to manage; everything is stored in VS Code's global state
 
 ## Usage
 
