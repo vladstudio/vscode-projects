@@ -1,10 +1,8 @@
-<p align="center">
-  <img src="icon/workspaces-color.png" width="128" />
-</p>
+<img src="icon/workspaces-color.png" width="128" />
 
-<h1 align="center">Projects</h1>
+# Projects
 
-<p align="center">Switch between your project folders without leaving VS Code.</p>
+Switch between your project folders without leaving VS Code.
 
 ## Features
 
