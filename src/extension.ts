@@ -9,10 +9,16 @@ let folders: string[] = [];
 let state: vscode.Memento;
 const emitter = new vscode.EventEmitter<void>();
 
+function updateCurrentFolderContext() {
+  const current = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  vscode.commands.executeCommand("setContext", "projects.currentFolderAdded", current ? folders.includes(current) : false);
+}
+
 function save() {
   folders.sort(byName);
   state.update(KEY, folders);
   emitter.fire();
+  updateCurrentFolderContext();
 }
 
 function openFolder(fsPath: string) {
@@ -67,6 +73,7 @@ export function activate(ctx: vscode.ExtensionContext) {
     canSelectMany: false,
   });
   ctx.subscriptions.push(tree, emitter);
+  updateCurrentFolderContext();
 
   ctx.subscriptions.push(
     vscode.commands.registerCommand("projects.addFolder", async () => {

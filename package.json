@@ -74,7 +74,7 @@
         },
         {
           "command": "projects.addCurrentFolder",
-          "when": "view == projectsView",
+          "when": "view == projectsView && !projects.currentFolderAdded",
           "group": "navigation"
         },
         {
@@ -105,7 +105,8 @@
   "scripts": {
     "vscode:prepublish": "bun run compile",
     "compile": "node ./node_modules/typescript/lib/tsc.js -p ./",
-    "watch": "node ./node_modules/typescript/lib/tsc.js -watch -p ./"
+    "watch": "node ./node_modules/typescript/lib/tsc.js -watch -p ./",
+    "release": "npm version patch && vsce publish && ovsx publish"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
