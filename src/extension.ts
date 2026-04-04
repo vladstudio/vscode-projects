@@ -62,8 +62,10 @@ const treeProvider: vscode.TreeDataProvider<string> = {
 };
 
 export function activate(ctx: vscode.ExtensionContext) {
-  const iconUri = vscode.Uri.joinPath(ctx.extensionUri, "icon", "workspaces.svg");
-  iconPath = { light: iconUri, dark: iconUri };
+  iconPath = {
+    light: vscode.Uri.joinPath(ctx.extensionUri, "icon", "workspaces.svg"),
+    dark: vscode.Uri.joinPath(ctx.extensionUri, "icon", "workspaces-dark.svg"),
+  };
   state = ctx.globalState;
   folders = state.get<string[]>(KEY, []);
   folders.sort(byName);
