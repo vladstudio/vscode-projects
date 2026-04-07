@@ -26,12 +26,9 @@ function openFolder(fsPath: string) {
 }
 
 function addFolderIfMissing(fsPath: string) {
-  if (!folders.includes(fsPath)) {
-    folders.push(fsPath);
-    save();
-    return true;
-  }
-  return false;
+  if (folders.includes(fsPath)) return false;
+  folders.push(fsPath);
+  return true;
 }
 
 let iconPath: { light: vscode.Uri; dark: vscode.Uri };
@@ -70,9 +67,28 @@ export function activate(ctx: vscode.ExtensionContext) {
   folders = state.get<string[]>(KEY, []);
   folders.sort(byName);
 
+  const dropController: vscode.TreeDragAndDropController<string> = {
+    dropMimeTypes: ["text/uri-list"],
+    dragMimeTypes: [],
+    async handleDrop(_target, sources) {
+      const uriList = await sources.get("text/uri-list")?.asString();
+      if (!uriList) return;
+      let changed = false;
+      for (const line of uriList.split(/\r?\n/)) {
+        if (!line || line.startsWith("#")) continue;
+        const uri = vscode.Uri.parse(line.trim());
+        if (uri.scheme === "file") {
+          try { if (fs.statSync(uri.fsPath).isDirectory() && addFolderIfMissing(uri.fsPath)) changed = true; } catch {}
+        }
+      }
+      if (changed) save();
+    },
+  };
+
   const tree = vscode.window.createTreeView("projectsView", {
     treeDataProvider: treeProvider,
     canSelectMany: false,
+    dragAndDropController: dropController,
   });
   ctx.subscriptions.push(tree, emitter);
   updateCurrentFolderContext();
@@ -81,10 +97,9 @@ export function activate(ctx: vscode.ExtensionContext) {
     vscode.commands.registerCommand("projects.addFolder", async () => {
       const uris = await vscode.window.showOpenDialog({ canSelectFolders: true, canSelectMany: true });
       if (!uris) return;
-      for (const uri of uris) {
-        if (!folders.includes(uri.fsPath)) folders.push(uri.fsPath);
-      }
-      save();
+      let changed = false;
+      for (const uri of uris) if (addFolderIfMissing(uri.fsPath)) changed = true;
+      if (changed) save();
     }),
 
     vscode.commands.registerCommand("projects.addCurrentFolder", () => {
@@ -94,8 +109,8 @@ export function activate(ctx: vscode.ExtensionContext) {
         return;
       }
 
-      const added = addFolderIfMissing(currentFolder);
-      if (added) {
+      if (addFolderIfMissing(currentFolder)) {
+        save();
         vscode.window.showInformationMessage(`Added project: ${path.basename(currentFolder)}`);
         return;
       }
@@ -104,15 +119,9 @@ export function activate(ctx: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand("projects.cleanupFolders", () => {
-      const removedCount = folders.length;
-      const nextFolders = folders.filter((folder) => {
-        try {
-          return fs.statSync(folder).isDirectory();
-        } catch {
-          return false;
-        }
-      });
-      const deletedCount = removedCount - nextFolders.length;
+      const before = folders.length;
+      const nextFolders = folders.filter((f) => { try { return fs.statSync(f).isDirectory(); } catch { return false; } });
+      const deletedCount = before - nextFolders.length;
       if (deletedCount === 0) {
         vscode.window.showInformationMessage("Cleanup complete: no missing folders found.");
         return;
@@ -131,9 +140,7 @@ export function activate(ctx: vscode.ExtensionContext) {
       }
     }),
 
-    vscode.commands.registerCommand("projects.openFolder", (fsPath: string) => {
-      openFolder(fsPath);
-    }),
+    vscode.commands.registerCommand("projects.openFolder", openFolder),
 
     vscode.commands.registerCommand("projects.openPicker", async () => {
       const items = folders.map((f) => ({ label: path.basename(f), description: f, fsPath: f }));
