@@ -142,6 +142,10 @@ export function activate(ctx: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand("projects.openFolder", openFolder),
 
+    vscode.commands.registerCommand("projects.revealInFinder", (fsPath: string) => {
+      vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(fsPath));
+    }),
+
     vscode.commands.registerCommand("projects.openPicker", async () => {
       const items = folders.map((f) => ({ label: path.basename(f), description: f, fsPath: f }));
       const picked = await vscode.window.showQuickPick(items, { placeHolder: "Select project" });

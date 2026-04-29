@@ -61,6 +61,10 @@
         "title": "Open Project"
       },
       {
+        "command": "projects.revealInFinder",
+        "title": "Reveal in Finder"
+      },
+      {
         "command": "projects.openPicker",
         "title": "Projects: Open Picker"
       }
@@ -90,6 +94,10 @@
         },
         {
           "command": "projects.removeFolder",
+          "when": "view == projectsView"
+        },
+        {
+          "command": "projects.revealInFinder",
           "when": "view == projectsView"
         }
       ]
