@@ -21,8 +21,8 @@ function save() {
   updateCurrentFolderContext();
 }
 
-function openFolder(fsPath: string) {
-  vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(fsPath), { forceNewWindow: false });
+function openFolder(fsPath: string, forceNewWindow = false) {
+  vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(fsPath), { forceNewWindow });
 }
 
 function addFolderIfMissing(fsPath: string) {
@@ -141,6 +141,8 @@ export function activate(ctx: vscode.ExtensionContext) {
     }),
 
     vscode.commands.registerCommand("projects.openFolder", openFolder),
+
+    vscode.commands.registerCommand("projects.openFolderNewWindow", (fsPath: string) => openFolder(fsPath, true)),
 
     vscode.commands.registerCommand("projects.revealInFinder", (fsPath: string) => {
       vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(fsPath));

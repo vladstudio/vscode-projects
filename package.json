@@ -61,6 +61,11 @@
         "title": "Open Project"
       },
       {
+        "command": "projects.openFolderNewWindow",
+        "title": "Open Project in New Window",
+        "icon": "$(empty-window)"
+      },
+      {
         "command": "projects.revealInFinder",
         "title": "Reveal in Finder"
       },
@@ -99,6 +104,11 @@
         {
           "command": "projects.revealInFinder",
           "when": "view == projectsView"
+        },
+        {
+          "command": "projects.openFolderNewWindow",
+          "when": "view == projectsView",
+          "group": "inline"
         }
       ]
     },
